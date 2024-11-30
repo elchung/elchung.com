@@ -10,7 +10,7 @@ import {
 import { GitHubSourceCredentials, LinuxBuildImage, PipelineProject } from "aws-cdk-lib/aws-codebuild";
 import { Distribution, ViewerProtocolPolicy } from "aws-cdk-lib/aws-cloudfront";
 import { CacheControl } from "aws-cdk-lib/aws-s3-deployment";
-import { Bucket, BucketAccessControl } from "aws-cdk-lib/aws-s3";
+import { BlockPublicAccess, Bucket, BucketAccessControl } from "aws-cdk-lib/aws-s3";
 import { Action } from "aws-cdk-lib/aws-codepipeline-actions/lib/action";
 import { S3BucketOrigin } from "aws-cdk-lib/aws-cloudfront-origins";
 
@@ -105,11 +105,13 @@ export class BuildStack extends Stack {
 
     const bucket = new Bucket(this, `build_output_bucket_${env!.region}`, {
       publicReadAccess: true,
+      blockPublicAccess: BlockPublicAccess.BLOCK_ACLS,
       bucketName: `build-output-${env!.region}-${Aws.ACCOUNT_ID}`,
       enforceSSL: true,
     });
     const loggingBucket = new Bucket(this, 'access_logging_bucket', {
       enforceSSL: true,
+      blockPublicAccess: BlockPublicAccess.BLOCK_ALL,
       bucketName: `access-logging-${env!.region}-${Aws.ACCOUNT_ID}`,
       accessControl: BucketAccessControl.LOG_DELIVERY_WRITE
     })

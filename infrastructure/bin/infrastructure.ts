@@ -3,7 +3,7 @@ import { BuildStack } from "../lib/infrastructure-stack";
 
 
 const env = {
-  account: "278863842127",
+  account: "192602193058",
   region: "us-west-2",
 };
 
