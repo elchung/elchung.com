@@ -4,10 +4,12 @@ import { Artifact, Pipeline } from "aws-cdk-lib/aws-codepipeline";
 import { AccountPrincipal, PolicyStatement } from "aws-cdk-lib/aws-iam";
 import { CodeBuildAction, GitHubSourceAction, S3DeployAction } from "aws-cdk-lib/aws-codepipeline-actions";
 import { BuildSpec, GitHubSourceCredentials, PipelineProject } from "aws-cdk-lib/aws-codebuild";
-import {Distribution, GeoRestriction, ViewerProtocolPolicy} from "aws-cdk-lib/aws-cloudfront";
+import { Distribution, GeoRestriction, ViewerProtocolPolicy } from "aws-cdk-lib/aws-cloudfront";
 import { CacheControl } from "aws-cdk-lib/aws-s3-deployment";
 import { BlockPublicAccess, Bucket, BucketAccessControl } from "aws-cdk-lib/aws-s3";
 import { S3BucketOrigin } from "aws-cdk-lib/aws-cloudfront-origins";
+import { HostedZone } from "aws-cdk-lib/aws-route53";
+import { Certificate, CertificateValidation } from "aws-cdk-lib/aws-certificatemanager";
 
 export class BuildStack extends Stack {
   public readonly artifactBucketEncryptionKey? : IKey
@@ -15,7 +17,19 @@ export class BuildStack extends Stack {
   constructor(parent: App, name: string, props: StackProps) {
     super(parent, name, props);
     const { env } = props;
+    
+    const hostedZone = new HostedZone(this, "HostedZone", {
+      zoneName: 'elchung.com'
+    })
+    const cert = new Certificate(this, 'elchungCert', {
+      domainName: 'elchung.com',
+      subjectAlternativeNames: ['*.elchung.com'],
+      certificateName: 'elchung-cert',
+      validation: CertificateValidation.fromDns(hostedZone),
 
+    });
+    
+    
     const pipeline = new Pipeline(this, 'Pipeline', {
       pipelineName: "elchung-dot-com-build-pipeline",
       crossAccountKeys: false,
@@ -70,6 +84,7 @@ export class BuildStack extends Stack {
       enabled: true,
       enableLogging: true,
       logBucket: loggingBucket,
+      certificate: cert,
       geoRestriction: GeoRestriction.allowlist('US', 'CA'),
       defaultBehavior: {
         origin: S3BucketOrigin.withOriginAccessControl(bucket),
