@@ -1,6 +1,6 @@
 # Welcome to your CDK TypeScript project
 
-This is a blank project for CDK development with TypeScript.
+Generic github to aws deploy infrastructure. This will setup triggers to deploy a new website on main push
 
 The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
