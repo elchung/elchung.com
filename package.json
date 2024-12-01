@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "bootstrap": "npm install && cdk bootstrap",
+    "release": "npm run bootstrap && npm run build && npm run test"
+   },
+  "version": "0.0.1",
+  "name": "elchung",
+  "dependencies": {
+    "uglifyjs-webpack-plugin": "2.2.0"
+  }
+}

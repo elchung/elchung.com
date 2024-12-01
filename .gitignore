@@ -1,0 +1,6 @@
+build
+.idea
+/package/infrastructure/build/
+node_modules
+.env
+.vscode

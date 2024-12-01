@@ -1,0 +1,10 @@
+version: 0.1
+
+phases:
+  build:
+    commands:
+      - npm run release
+artifacts:
+  base-directory: packages/website/dist
+  files:
+    - "**/*"

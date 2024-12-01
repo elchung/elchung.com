@@ -1,17 +1,12 @@
 import { IKey } from "aws-cdk-lib/aws-kms";
-import {App, Aws, SecretValue, Stack, StackProps} from "aws-cdk-lib";
+import { App, Aws, SecretValue, Stack, StackProps } from "aws-cdk-lib";
 import { Artifact, Pipeline } from "aws-cdk-lib/aws-codepipeline";
 import { AccountPrincipal, PolicyStatement } from "aws-cdk-lib/aws-iam";
-import {
-  CodeBuildAction,
-  GitHubSourceAction,
-  S3DeployAction
-} from "aws-cdk-lib/aws-codepipeline-actions";
-import { BuildSpec, GitHubSourceCredentials, LinuxBuildImage, PipelineProject } from "aws-cdk-lib/aws-codebuild";
-import { Distribution, ViewerProtocolPolicy } from "aws-cdk-lib/aws-cloudfront";
+import { CodeBuildAction, GitHubSourceAction, S3DeployAction } from "aws-cdk-lib/aws-codepipeline-actions";
+import { BuildSpec, GitHubSourceCredentials, PipelineProject } from "aws-cdk-lib/aws-codebuild";
+import {Distribution, GeoRestriction, ViewerProtocolPolicy} from "aws-cdk-lib/aws-cloudfront";
 import { CacheControl } from "aws-cdk-lib/aws-s3-deployment";
 import { BlockPublicAccess, Bucket, BucketAccessControl } from "aws-cdk-lib/aws-s3";
-import { Action } from "aws-cdk-lib/aws-codepipeline-actions/lib/action";
 import { S3BucketOrigin } from "aws-cdk-lib/aws-cloudfront-origins";
 
 export class BuildStack extends Stack {
@@ -72,8 +67,10 @@ export class BuildStack extends Stack {
       accessControl: BucketAccessControl.LOG_DELIVERY_WRITE
     })
     new Distribution(this, `elchung`, {
+      enabled: true,
       enableLogging: true,
       logBucket: loggingBucket,
+      geoRestriction: GeoRestriction.allowlist('US', 'CA'),
       defaultBehavior: {
         origin: S3BucketOrigin.withOriginAccessControl(bucket),
         viewerProtocolPolicy: ViewerProtocolPolicy.REDIRECT_TO_HTTPS
@@ -85,6 +82,7 @@ export class BuildStack extends Stack {
           responseHttpStatus: 200,
         }
       ],
+      domainNames: ['elchung.com', 'www.elchung.com'],
       defaultRootObject: 'index.html',
     });
 
@@ -101,7 +99,7 @@ export class BuildStack extends Stack {
           build: {
             commands: [
               'npm run lint',
-              'npm run test:unit',
+              'npm run test',
               'npm run deploy',
             ]
           },
