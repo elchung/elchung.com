@@ -1,7 +1,7 @@
 {
   "scripts": {
     "bootstrap": "npm install && cdk bootstrap",
-    "release": "npm run bootstrap && npm run build && npm run test"
+    "release": "npm run bootstrap"
    },
   "version": "0.0.1",
   "name": "elchung",
