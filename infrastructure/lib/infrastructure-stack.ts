@@ -60,7 +60,7 @@ export class BuildStack extends Stack {
       // ssm secure token was manually entered via console
       accessToken: oauthToken,
     });
-    
+
     const bucket = new Bucket(this, `build_output_bucket_${env!.region}`, {
       publicReadAccess: true,
       blockPublicAccess: BlockPublicAccess.BLOCK_ACLS,

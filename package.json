@@ -1,8 +1,10 @@
 {
   "scripts": {
-    "bootstrap": "npm install && cdk bootstrap",
-    "release": "npm run bootstrap"
-   },
+    "bootstrap": "",
+    "bootstrap:ci": "",
+    "update": "",
+
+  },
   "version": "0.0.1",
   "name": "elchung",
   "dependencies": {
