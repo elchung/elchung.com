@@ -1,0 +1,16 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 20
+    commands:
+      - npm install -g yarn
+      - yarn install
+  build:
+    commands:
+      - yarn build
+artifacts:
+  files:
+    - '**/*'
+  base-directory: build
